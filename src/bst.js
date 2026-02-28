@@ -82,7 +82,7 @@ class Tree {
      *          True if a node with matching value is found, otherwise false.
      */
     includes(value) {
-        return this.findNode(value) ? true : false;
+        return this.findNode(value) !== null; // If not null, return true
     }
 
     /**
@@ -108,17 +108,38 @@ class Tree {
 
     /**
      * Inserts a value at the correct position maintaining the BST property of the tree.
+     * Handles insertion on an empty tree by assigning _insertRec() to root.
      *
      * @param {number} value - The value to be inserted.
      */
     insert(value) {
-        if (!node) return null;
-        if (node.value === value) return node;
+        this.root = this._insertRec(value, this.root);
+    }
 
-        // Go left if smaller, right if larger
-        return value < node.value
-            ? this.findNode(value, node.left)
-            : this.findNode(value, node.right);
+    /**
+     * Internal recursive function used by insert(value)
+     *
+     * @param {number} value
+     *        The value to be inserted.
+     * @param {Node|null} node
+     *        The current subtree root. If null, a new node is created here.
+     * @return {Node}
+     *        The root of the updated subtree.
+     *
+     */
+    _insertRec(value, node) {
+        // If empty, add new node here
+        if (!node) {
+            return new Node(value);
+        }
+
+        // Otherwise, recur down the tree.
+        if (value < node.value) {
+            node.left = this._insertRec(value, node.left);
+        } else if (value > node.value) {
+            node.right = this._insertRec(value, node.right);
+        }
+        return node;
     }
 
     /**
@@ -138,9 +159,9 @@ class Tree {
         }
 
         // In-order traversal (left-data-right)
-        this.traverse(callback, node.left);
+        this.inOrderForEach(callback, node.left);
         callback(node);
-        this.traverse(callback, node.right);
+        this.inOrderForEach(callback, node.right);
     }
 }
 
