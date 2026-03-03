@@ -198,23 +198,51 @@ class Tree {
     /**
      * Performs an in‑order depth‑first traversal of the tree.
      *
-     * Visits nodes in ascending sorted order: left subtree → node → right subtree.
+     * Recursively visits nodes in ascending sorted order: left subtree → node → right subtree.
      * The provided callback is invoked once for each node encountered.
      *
-     * @param {function(Node): void} callback - Function applied to each visited node.
+     * @param {function(Node): void} callback - Function applied to each visited node's value.
      * @param {Node|null} [node=this.root] - Internal parameter used during recursion.
      * @returns {void}
      */
     inOrderForEach(callback, node = this.root) {
         // Base case
-        if (!node) {
-            return;
-        }
+        if (!node) return;
 
         // In-order traversal (left-data-right)
         this.inOrderForEach(callback, node.left);
-        callback(node);
+        callback(node.value);
         this.inOrderForEach(callback, node.right);
+    }
+
+    /**
+     * Performs a level‑order (breadth‑first) traversal of the tree.
+     *
+     * Visits nodes one level at a time starting from the root. A queue
+     * ensures nodes are processed in depth order: each visited node has
+     * its children enqueued, and the traversal continues until the queue
+     * is empty. The callback is invoked once for each node's value.
+     *
+     * @param {function(number): void} callback - Function applied to each node's value.
+     * @param {Node[]} [queue=[this.root]] - Internal queue used to maintain traversal order.
+     * @returns {void}
+     */
+
+    levelOrderForEach(callback, queue = [this.root]) {
+        // Base case
+        if (!this.root) return;
+        if (queue.length === 0) return;
+
+        // Assign first element of the queue to node, then remove the element.
+        const node = queue.shift();
+        callback(node.value);
+
+        // If children, add them to the queue.
+        if (node.left) queue.push(node.left);
+        if (node.right) queue.push(node.right);
+
+        // Recurse.
+        this.levelOrderForEach(callback, queue);
     }
 }
 
