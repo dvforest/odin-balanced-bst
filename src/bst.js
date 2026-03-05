@@ -196,23 +196,62 @@ class Tree {
     }
 
     /**
-     * Performs an in‑order depth‑first traversal of the tree.
+     * Performs a in‑order depth‑first traversal of the tree.
      *
      * Recursively visits nodes in ascending sorted order: left subtree → node → right subtree.
-     * The provided callback is invoked once for each node encountered.
+     * The provided callback is invoked once for each node's value encountered.
      *
-     * @param {function(Node): void} callback - Function applied to each visited node's value.
+     * @param {function(number): void} callback - Function applied to each visited node's value.
      * @param {Node|null} [node=this.root] - Internal parameter used during recursion.
      * @returns {void}
      */
     inOrderForEach(callback, node = this.root) {
-        // Base case
+        if (!callback) throw new Error('Callback function required.');
         if (!node) return;
 
-        // In-order traversal (left-data-right)
         this.inOrderForEach(callback, node.left);
         callback(node.value);
         this.inOrderForEach(callback, node.right);
+    }
+
+    /**
+     * Performs an pre‑order depth‑first traversal of the tree.
+     *
+     * Recursively visits nodes in pre-order: node → left subtree → right subtree.
+     * Useful for operations that need to process parents before their children (for example,
+     * copying a tree). The provided callback is invoked once for each node's value encountered.
+     *
+     * @param {function(number): void} callback - Function applied to each visited node's value.
+     * @param {Node|null} [node=this.root] - Internal parameter used during recursion.
+     * @returns {void}
+     */
+    preOrderForEach(callback, node = this.root) {
+        if (!callback) throw new Error('Callback function required.');
+        if (!node) return;
+
+        callback(node.value);
+        this.preOrderForEach(callback, node.left);
+        this.preOrderForEach(callback, node.right);
+    }
+
+    /**
+     * Performs an post‑order depth‑first traversal of the tree.
+     *
+     * Recursively visits nodes in post-order: left subtree → right subtree → node.
+     * Useful for operations that need to process children before their parent (for example,
+     * deleting a tree). The provided callback is invoked once for each node's value encountered.
+     *
+     * @param {function(number): void} callback - Function applied to each visited node's value.
+     * @param {Node|null} [node=this.root] - Internal parameter used during recursion.
+     * @returns {void}
+     */
+    postOrderForEach(callback, node = this.root) {
+        if (!callback) throw new Error('Callback function required.');
+        if (!node) return;
+
+        this.postOrderForEach(callback, node.left);
+        this.postOrderForEach(callback, node.right);
+        callback(node.value);
     }
 
     /**
@@ -227,13 +266,12 @@ class Tree {
      * @param {Node[]} [queue=[this.root]] - Internal queue used to maintain traversal order.
      * @returns {void}
      */
-
     levelOrderForEach(callback, queue = [this.root]) {
-        // Base case
+        if (!callback) throw new Error('Callback function required.');
         if (!this.root) return;
         if (queue.length === 0) return;
 
-        // Assign first element of the queue to node, then remove the element.
+        // Process first element of queue, then remove it.
         const node = queue.shift();
         callback(node.value);
 
@@ -241,7 +279,6 @@ class Tree {
         if (node.left) queue.push(node.left);
         if (node.right) queue.push(node.right);
 
-        // Recurse.
         this.levelOrderForEach(callback, queue);
     }
 }

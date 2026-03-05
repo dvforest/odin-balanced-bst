@@ -14,6 +14,4 @@ function prettyPrint(node, prefix = '', isLeft = true) {
 
 prettyPrint(tree.root);
 
-tree.deleteItem(8);
-
-prettyPrint(tree.root);
+tree.postOrderForEach(console.log);
