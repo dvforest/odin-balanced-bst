@@ -14,4 +14,4 @@ function prettyPrint(node, prefix = '', isLeft = true) {
 
 prettyPrint(tree.root);
 
-tree.postOrderForEach(console.log);
+console.log(tree.height(8));

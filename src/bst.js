@@ -93,18 +93,7 @@ class Tree {
      * @returns {boolean} - True if a matching value exists in the tree, otherwise false.
      */
     includes(value) {
-        function findNode(value, node) {
-            // If no node exists, return null.
-            if (!node) return null;
-
-            // Value found? Return the node.
-            if (node.value === value) return node;
-
-            // Otherwise, recurse left if smaller, or right if larger
-            return value < node.value ? findNode(value, node.left) : findNode(value, node.right);
-        }
-
-        return findNode(value, this.root) !== null;
+        return this._search(value) != null;
     }
 
     /**
@@ -280,6 +269,48 @@ class Tree {
         if (node.right) queue.push(node.right);
 
         this.levelOrderForEach(callback, queue);
+    }
+
+    /**
+     * Computes the height of the subtree rooted at the node whose value matches the input.
+     *
+     * The method first locates the node with the given value. If found, it recursively
+     * determines the height of that node by exploring its left and right subtrees,
+     * taking the larger of the two heights, and adding one for the current node.
+     * Returns undefined if no matching node exists in the tree.
+     *
+     * @param {number} value - The value whose subtree height should be computed.
+     * @returns {number|undefined} The height of the matching node, or undefined if no such node exists.
+     */
+    height(value) {
+        const found = this.search(value);
+        if (!found) return undefined;
+
+        function heightRec(node) {
+            if (!node) return -1;
+            return 1 + Math.max(heightRec(node.left), heightRec(node.right));
+        }
+
+        return heightRec(found);
+    }
+
+    /**
+     * Returns a node in the tree whose value matches the target.
+     *
+     * Performs a recursive descent from the root, comparing the target
+     * value to each node and following the appropriate subtree until
+     * the value is found or the search reaches a null branch.
+     *
+     * @param {number} value - The value to search for.
+     * @param {Node} [node=this.root] - Internal parameter used during recursion.
+     * @returns {Node|null} The node matching the value if found, otherwise null.
+     */
+    search(value, node = this.root) {
+        if (!node) return null;
+        if (node.value === value) return node;
+
+        if (value < node.value) return this.search(value, node.left);
+        return this.search(value, node.right);
     }
 }
 
