@@ -279,7 +279,7 @@ class Tree {
      * taking the larger of the two heights, and adding one for the current node.
      * Returns undefined if no matching node exists in the tree.
      *
-     * @param {number} value - The value whose subtree height should be computed.
+     * @param {number} value - The value of the node whose subtree height should be computed.
      * @returns {number|undefined} The height of the matching node, or undefined if no such node exists.
      */
     height(value) {
@@ -292,6 +292,25 @@ class Tree {
         }
 
         return heightRec(found);
+    }
+
+    /**
+     * Computes the depth of the node containing the given value.
+     * Depth is defined as the number of edges in the path from that node
+     * to the root node. Returns undefined if no node matching the value was found.
+     *
+     * @param {number} value - The value of the node whose depth should be computed.
+     * @returns {number} The depth of the node from the root.
+     */
+    depth(value, d = 0, node = this.root) {
+        if (!node) return undefined;
+        if (node.value === value) return d;
+
+        if (value < node.value) {
+            return this.depth(value, d + 1, node.left);
+        } else {
+            return this.depth(value, d + 1, node.right);
+        }
     }
 
     /**
@@ -309,8 +328,11 @@ class Tree {
         if (!node) return null;
         if (node.value === value) return node;
 
-        if (value < node.value) return this.search(value, node.left);
-        return this.search(value, node.right);
+        if (value < node.value) {
+            return this.search(value, node.left);
+        } else {
+            return this.search(value, node.right);
+        }
     }
 }
 
