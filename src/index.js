@@ -13,7 +13,6 @@ function prettyPrint(node, prefix = '', isLeft = true) {
 }
 
 prettyPrint(tree.root);
-console.log(tree.isBalanced());
 
 tree.insert(24);
 tree.insert(25);
@@ -21,3 +20,6 @@ tree.insert(26);
 
 prettyPrint(tree.root);
 console.log(tree.isBalanced());
+
+tree.rebalance();
+prettyPrint(tree.root);

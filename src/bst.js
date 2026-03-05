@@ -357,6 +357,21 @@ class Tree {
         };
         return getProp().balanced;
     }
+
+    /**
+     * Rebalances the tree if it is unbalanced.
+     *
+     * Performs an in-order traversal to collect all values in sorted order,
+     * then rebuilds the tree into a perfectly balanced BST using those values.
+     *
+     * @returns {void}
+     */
+    rebalance() {
+        if (this.isBalanced()) return;
+        const newTree = [];
+        this.inOrderForEach((value) => newTree.push(value));
+        this.root = this.buildTree(newTree, 0, newTree.length - 1);
+    }
 }
 
 export { Tree };
